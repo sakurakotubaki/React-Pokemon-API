@@ -1,0 +1,12 @@
+/*Navigationのスタイル*/
+nav {
+  background-color: #F7801C;
+  color: #fff;
+  height: 65px;
+  font-weight: 600;
+  font-size: 25px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
