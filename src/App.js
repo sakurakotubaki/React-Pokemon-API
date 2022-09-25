@@ -13,6 +13,8 @@ function App() {
   const [pokemonData, setPokemonData] = useState([]);
   // 次のページの状態を保存する変数
   const [nextURL, setNextURL] = useState("");
+  // 前のページの状態を保存する変数
+  const [prevURL, setPrevURL] = useState("");
 
   // 一度だけ呼び出すので、第二引数にからの配列を渡す[]
   useEffect(() => {
@@ -22,9 +24,11 @@ function App() {
       //各ポケモンの詳細なデータを取得
       loadPokemon(res.results);
       //次のページのポケモンのデータが入っている
-      console.log(res.next);
+      // console.log(res.next);
       //次のポケモンのデータを自動で入れる
       setNextURL(res.next);
+      //前のポケモンのデータを自動で入れる
+      setPrevURL(res.previous); //最初はnullになる
       setLoading(false);
     };
     // 関数を呼ぶ
@@ -48,14 +52,29 @@ function App() {
   // 次のページへいくボタン
   const handleNextPage = async () => {
     setLoading(true);
+    //3ページ目も見れるように引数を渡す
     let data = await getAllPokemon(nextURL);
     // console.log(data);
     // 画面に呼び出すコード
     await loadPokemon(data.results);
+    setNextURL(data.next);
+    // 前のページのURLを設定
+    setPrevURL(data.previous);
     setLoading(false);
   };
   // 前のページへいくボタン
-  const handlePrevPage = () => {};
+  const handlePrevPage = async () => {
+    // prevURLがなかったらreturnで返してあげるだけ
+    if(!prevURL) return;
+
+    setLoading(true);
+    //以前のポケモンのデータを取得
+    let data = await getAllPokemon(prevURL);
+    await loadPokemon(data.results);
+    setNextURL(data.next);
+    setPrevURL(data.previous);
+    setLoading(false);
+  };
 
   return (
     <>
